@@ -29,15 +29,16 @@ Prerequisites:
 * python >= 3.8
 * docker
 * use a Chrome browser for development
-* `anthropic.claude-v2` model activated in Amazon Bedrock in your AWS account
-* the environment used to create this demo was an AWS Cloud9 m5.large instance with Amazon Linux 2023, but it should also work with other configurations. It has also been tested on a mac laptop with colima as container runtime.
+* An already created Amazon Bedrock Agent
 * You also need to install the AWS Command Line Interface (CLI), the AWS Cloud Development KIT (CDK), and to configure the AWS CLI on your development environment (not required if you use Cloud9, as it is already configured by default). One way to configure the AWS CLI is to get your access key through the AWS console, and use the `aws configure` command in your terminal to setup your credentials.
 
 To deploy:
 
 1. Edit `docker_app/config_file.py`, choose a `STACK_NAME` and a `CUSTOM_HEADER_VALUE`.
 
-2. Install dependencies
+2. Edit  `AGENT_ID`, `AGENT_ALIAS_ID`, `AGENT_REGION` in the `docker_app/config_file.py` file
+
+3. Install dependencies
  
 ```
 python -m venv .venv
@@ -61,10 +62,10 @@ and the Cognito user pool id.
 5. From your browser, connect to the CloudFront distribution url.
 6. Log in to the Streamlit app with the user you have created in Cognito.
 
-## Testing and developing in Cloud9
+## Testing and developing locally
 
-After deployment of the cdk template containing the Cognito user pool required for authentication, you can test the Streamlit app directly from Cloud9.
-You can either use docker, but this would require setting up a role with appropriate permissions, or run the Streamlit app directly in your terminal after having installed the required python dependencies.
+After deployment of the cdk template containing the Cognito user pool required for authentication, you can test the Streamlit app directly from your local environment.
+You can run the Streamlit app directly in your terminal after having installed the required python dependencies.
 
 To run the Streamlit app directly:
 
@@ -89,10 +90,7 @@ pip install -r requirements.txt
 streamlit run app.py --server.port 8080
 ```
 
-4. Click on the Preview/Preview running application button in Cloud9, and click on the button to Pop out the browser in a new window, as the Cloud9 embedded browser does not keep session cookies, which prevents the authentication mechanism to work properly.
-If the new window does not display the app, you may need to configure your browser to accept cross-site tracking cookies.
-
-5. You can now modify the streamlit app to build your own demo!
+4. You can now modify the streamlit app to build your own demo and then re-deploy!
 
 ## Some limitations
 

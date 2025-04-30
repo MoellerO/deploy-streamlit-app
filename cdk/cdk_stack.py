@@ -17,6 +17,7 @@ from docker_app.config_file import Config
 
 CUSTOM_HEADER_NAME = "X-Custom-Header"
 
+
 class CdkStack(Stack):
 
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
@@ -46,7 +47,6 @@ class CdkStack(Stack):
                                        # container
                                        secret_name=Config.SECRETS_MANAGER_ID
                                        )
-
 
         # VPC for ALB and ECS cluster
         vpc = ec2.Vpc(
@@ -128,12 +128,18 @@ class CdkStack(Stack):
                 subnet_type=ec2.SubnetType.PRIVATE_WITH_EGRESS),
         )
 
-        # Grant access to Bedrock
+        # Grant access to Bedrock Agent Runtime
         bedrock_policy = iam.Policy(self, f"{prefix}BedrockPolicy",
                                     statements=[
                                         iam.PolicyStatement(
-                                            actions=["bedrock:InvokeModel"],
-                                            resources=["*"]
+                                            sid="InvokeAgent",
+                                            effect=iam.Effect.ALLOW,
+                                            actions=[
+                                                "bedrock:InvokeAgent"
+                                            ],
+                                            resources=[
+                                                f"arn:aws:bedrock:{Config.AGENT_REGION}:*:agent-alias/{Config.AGENT_ID}/{Config.AGENT_ALIAS_ID}"
+                                            ]
                                         )
                                     ]
                                     )
